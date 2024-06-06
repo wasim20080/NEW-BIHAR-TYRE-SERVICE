@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support - New Bihar Tyre Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(216, 144, 11);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        main {
+            background: rgb(255, 166, 0);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgb(255, 0, 0);
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        .contact-info {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .contact-info h4 {
+            margin: 5px 0;
+        }
+        .contact-info a {
+            color: orangered;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .contact-info a:hover {
+            color: rgb(104, 76, 24);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="text"], input[type="number"], input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid orangered;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: orangered;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin: 10px 0;
+            transition: background-color 0.2s;
+        }
+        input[type="submit"]:hover {
+            background-color: rgb(255, 115, 0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Customer Care Support</h2>
+    </header>
+    <main>
+        <div class="contact-info">
+            <h4>Email: <a href="mailto:newbihartyreservice@gmail.com">newbihartyreservice@gmail.com</a></h4>
+            <h4>Mobile Number: <a href="tel:+917717756142">7717756142</a>, <a href="tel:+919934968530">9934968530</a></h4>
+            <h4>WhatsApp Number: <a href="https://wa.me/917717756142">7717756142</a>, <a href="https://wa.me/919934968530">9934968530</a></h4>
+        </div>
+        <div>
+            <h4>Contact For Support</h4>
+            <form action="action.php">
+                <input type="text" name="name" placeholder="Enter your name" required>
+                <input type="number" name="number" placeholder="Enter your number" required>
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </main>
+</body>
+</html>

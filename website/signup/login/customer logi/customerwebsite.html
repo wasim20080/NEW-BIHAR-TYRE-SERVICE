@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Bihar Tyre Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: orangered;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 24px;
+        }
+        .border{
+            border: 1.5px solid transparent;
+        }
+        
+        .border:hover{
+            border: 1.5px solid rgb(245, 245, 245);
+        }
+        nav {
+            background-color: #febd68;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            color: rgb(255, 255, 255);
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            transition: background 0.3s;
+            border-radius: 25px;
+        }
+        nav a:hover {
+            background-color: orange;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #febd68;
+            min-width: 160px;
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: rgb(255, 0, 0);
+            padding: 10px;
+            display: block;
+            text-decoration: none;
+        }
+        .dropdown-content a:hover {
+            background-color: orange;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: rgb(255, 255, 255);
+            border-radius: 20px;
+            padding: 5px 10px;
+            width: 300px;
+            border: 2px solid #de9b00;
+        }
+        .search-bar input[type="text"] {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 5px;
+            border-radius: 20px;
+        }
+        .search-bar button {
+            background-color: #ffb411;
+            color: rgb(74, 4, 4);
+            border: none;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .search-bar button:hover {
+            background-color: orangered;
+            transform: scale(1.05);
+        }
+        .product-catalog {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+        .product-item {
+            border: 1px solid #fb0000;
+            border-radius: 15px;
+            margin: 10px;
+            padding: 15px;
+            width: 300px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .product-item img {
+            max-width: 100%;
+            height: auto;
+            border-bottom: 1px solid #f30000;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+        .product-item button {
+            background-color: orangered;
+            color: rgb(255, 255, 255);
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin: 5px;
+        }
+        .product-item button:hover {
+            background-color: orange;
+            transform: scale(1.05);
+        }
+        .product-item:hover {
+            transform: scale(1.03);
+            box-shadow: 0 4px 8px rgba(157, 255, 0, 0.2);
+        }
+        .cart {
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        footer {
+            background-color: orangered;
+            color: rgb(235, 234, 234);
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .go-to-top {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background-color: #febd68;
+            color: rgb(255, 0, 0);
+            padding: 10px;
+            border-radius: 4px 4px 0 0;
+            cursor: pointer;
+            text-align: center;
+            z-index: 1000;
+        }
+        .go-to-top:hover {
+            background-color: rgb(194, 135, 24);
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .admin {
+            display: none;
+            padding: 20px;
+        }
+        .admin-item {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    NEW BIHAR TYRE SERVICE
+</header>
+
+<nav>
+    <a href="#" onclick="showHome()">Home</a>
+    <a href="#" onclick="openModal('checkSizeModal')">Check Size</a>
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search..." onkeypress="handleSearchKeyPress(event)">
+        <button onclick="searchProducts()">Search</button>
+    </div>
+    <div class="dropdown">
+        <a href="#" onclick="openModal('accountModal')">Your Account</a>
+        <div class="dropdown-content">
+            <a href="#">Orders</a>
+            <a href="#">Account Center</a>
+            <a href="#">Payments</a>
+        </div>
+    </div>
+    <a href="#" onclick="viewCart()">View Cart</a>
+    
+    <a href="file:///E:/New%20Bihar%20Tyre%20Service%20Online/index.html">Logout</a>
+</nav>
+
+<div class="product-catalog" id="productCatalog">
+    <!-- Product Item Template -->
+    <div class="product-item" data-name="2.75-17 41P ATT455 FORTUNA TBL">
+        <img src="assets/ATT455.jpg" alt="Product Image">
+        <h3>2.75-17 41P ATT455 FORTUNA TBL</h3>
+        <h6>TVS EUROGRIP ATT455 FORTUNA (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1146</p>
+        <p>₹ 872</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-17 41P ATT455 FORTUNA TBL - TVS EUROGRIP ATT455 FORTUNA (TBL)', 872.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-17 41P ATT455 FORTUNA TBL - TVS EUROGRIP ATT455 FORTUNA (TBL)', 872.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="2.75-17 41P ATT525 TBL">
+        <img src="assets/ATT525.jpg" alt="Product Image">
+        <h3>2.75-17 41P ATT525 TBL</h3>
+        <h6>TVS EUROGRIP ATT525 (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1146</p>
+        <p>₹ 872</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-17 41P ATT525 TBL - TVS EUROGRIP ATT525 (TBL)', 872.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-17 41P ATT525 TBL - TVS EUROGRIP ATT525 (TBL)', 872.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="2.75-17 41P TEF SPORTORQ QR TL">
+        <img src="assets/SPORTORQ.jpg" alt="Product Image">
+        <h3>2.75-17 41P TEF SPORTORQ QR TL</h3>
+        <h6>TVS EUROGRIP TEF SPORTORQ QR (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 872</p>
+        <p>₹ 872</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-17 41P TEF SPORTORQ QR TL - TVS EUROGRIP TEF SPORTORQ QR (TL)', 872.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-17 41P TEF SPORTORQ QR TL - TVS EUROGRIP TEF SPORTORQ QR (TL)', 872.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="2.75-17 4PR ATT455 TBL">
+        <img src="assets/ATT455.jpg" alt="Product Image">
+        <h3>2.75-17 4PR ATT455 TBL</h3>
+        <h6>TVS EUROGRIP ATT455 (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1044</p>
+        <p>₹ 872</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-17 4PR ATT455 TBL - TVS EUROGRIP ATT455 (TBL)', 872.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-17 4PR ATT455 TBL - TVS EUROGRIP ATT455 (TBL)', 872.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="2.75-17 41P TEF SPORTORQ QR TL">
+        <img src="assets/SPORTORQ.jpg" alt="Product Image">
+        <h3>2.75-17 41P TEF SPORTORQ QR TL</h3>
+        <h6>TVS EUROGRIP TEF SPORTORQ QR (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1087</p>
+        <p>₹ 872</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-17 41P TEF SPORTORQ QR TL - TVS EUROGRIP TEF SPORTORQ QR (TL)', 872.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-17 41P TEF SPORTORQ QR TL - TVS EUROGRIP TEF SPORTORQ QR (TL)', 872.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="2.75-18 48P 6PR JUMBO GT TL">
+        <img src="assets/JUMBO_GT.jpg" alt="Product Image">
+        <h3>2.75-18 48P 6PR JUMBO GT TL</h3>
+        <h6>TVS EUROGRIP JUMBO GT (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1331</p>
+        <p>₹ 1035</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-18 48P 6PR JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 1035.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-18 48P 6PR JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 1035.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="2.75-18 48P ATT455 TBL">
+        <img src="assets/ATT455.jpg" alt="Product Image">
+        <h3>2.75-18 48P ATT455 TBL</h3>
+        <h6>TVS EUROGRIP ATT455 (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1087</p>
+        <p>₹ 1035</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-18 48P ATT455 TBL - TVS EUROGRIP ATT455 (TBL)', 1035.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-18 48P ATT455 TBL - TVS EUROGRIP ATT455 (TBL)', 1035.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="2.75-18 48P 6PR DURA PRO TL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>2.75-18 48P 6PR DURA PRO TL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1394</p>
+        <p>₹ 1035</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('2.75-18 48P 6PR DURA PRO TL - TVS EUROGRIP DURA PRO (TL)', 1035.00)">Add to Cart</button>
+        <button onclick="buyNow('2.75-18 48P 6PR DURA PRO TL - TVS EUROGRIP DURA PRO (TL)', 1035.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="3.00-17 50P GPR ATT100R TBL">
+        <img src="assets/ATT100R.jpg" alt="Product Image">
+        <h3>3.00-17 50P GPR ATT100R TBL</h3>
+        <h6>TVS EUROGRIP ATT100R (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1934</p>
+        <p>₹ 1521</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('3.00-17 50P GPR ATT100R TBL - TVS EUROGRIP ATT100R (TBL)', 1521.00)">Add to Cart</button>
+        <button onclick="buyNow('3.00-17 50P GPR ATT100R TBL - TVS EUROGRIP ATT100R (TBL)', 1521.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="3.00-17 50P ATT455R TBL">
+        <img src="assets/ATT455R.jpg" alt="Product Image">
+        <h3>3.00-17 50P ATT455R TBL</h3>
+        <h6>TVS EUROGRIP ATT455R (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1357</p>
+        <p>₹ 1060</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('3.00-17 50P ATT455R TBL - TVS EUROGRIP ATT455R (TBL)', 1060.00)">Add to Cart</button>
+        <button onclick="buyNow('3.00-17 50P ATT455R TBL - TVS EUROGRIP ATT455R (TBL)', 1060.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="3.00-17 50P DURA PRO TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>3.00-17 50P DURA PRO TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1278</p>
+        <p>₹ 1056</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('3.00-17 50P DURA PRO TBL - TVS EUROGRIP DURA PRO (TBL)', 1056.00)">Add to Cart</button>
+        <button onclick="buyNow('3.00-17 50P DURA PRO TBL - TVS EUROGRIP DURA PRO (TBL)', 1056.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="3.00-17 6PR JUMBO GT TL">
+        <img src="assets/JUMBO_GT.jpg" alt="Product Image">
+        <h3>3.00-17 6PR JUMBO GT TL</h3>
+        <h6>TVS EUROGRIP JUMBO GT (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1401</p>
+        <p>₹ 1061</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('3.00-17 6PR JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 1061.00)">Add to Cart</button>
+        <button onclick="buyNow('3.00-17 6PR JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 1061.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-17 53P REINF. TEG JUMBO GT TL">
+        <img src="assets/JUMBO_GT.jpg" alt="Product Image">
+        <h3>80/100-17 53P REINF. TEG JUMBO GT TL</h3>
+        <h6>TVS EUROGRIP JUMBO GT (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1425</p>
+        <p>₹ 931</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-17 53P REINF. TEG JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 931.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-17 53P REINF. TEG JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 931.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-17 53S TE TEG 1.4">
+        <img src="assets/TE_TEG.jpg" alt="Product Image">
+        <h3>80/100-17 53S TE TEG 1.4</h3>
+        <h6>TVS EUROGRIP TE TEG 1.4</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1290</p>
+        <p>₹ 1075</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-17 53S TE TEG 1.4 - TVS EUROGRIP TE TEG 1.4', 1075.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-17 53S TE TEG 1.4 - TVS EUROGRIP TE TEG 1.4', 1075.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-17 54P ATT 750M TBL">
+        <img src="assets/ATT750M.jpg" alt="Product Image">
+        <h3>80/100-17 54P ATT 750M TBL</h3>
+        <h6>TVS EUROGRIP ATT 750M (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1414</p>
+        <p>₹ 1075</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-17 54P ATT 750M TBL - TVS EUROGRIP ATT 750M (TBL)', 1075.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-17 54P ATT 750M TBL - TVS EUROGRIP ATT 750M (TBL)', 1075.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-17 46P SPORTORQ TBL">
+        <img src="assets/SPORTORQ.jpg" alt="Product Image">
+        <h3>80/100-17 46P SPORTORQ TBL</h3>
+        <h6>TVS EUROGRIP SPORTORQ (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1415</p>
+        <p>₹ 1075</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-17 46P SPORTORQ TBL - TVS EUROGRIP SPORTORQ (TBL)', 1075.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-17 46P SPORTORQ TBL - TVS EUROGRIP SPORTORQ (TBL)', 1075.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 54P REINF. TEG JUMBO GT TL">
+        <img src="assets/JUMBO_GT.jpg" alt="Product Image">
+        <h3>80/100-18 54P REINF. TEG JUMBO GT TL</h3>
+        <h6>TVS EUROGRIP JUMBO GT (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1631</p>
+        <p>₹ 1045</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 54P REINF. TEG JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 1045.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 54P REINF. TEG JUMBO GT TL - TVS EUROGRIP JUMBO GT (TL)', 1045.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 54P ATT 525M TBL">
+        <img src="assets/ATT525M.jpg" alt="Product Image">
+        <h3>80/100-18 54P ATT 525M TBL</h3>
+        <h6>TVS EUROGRIP ATT 525M (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1415</p>
+        <p>₹ 1090</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 54P ATT 525M TBL - TVS EUROGRIP ATT 525M (TBL)', 1090.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 54P ATT 525M TBL - TVS EUROGRIP ATT 525M (TBL)', 1090.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 54P TE 1.4">
+        <img src="assets/TE_1.4.jpg" alt="Product Image">
+        <h3>80/100-18 54P TE 1.4</h3>
+        <h6>TVS EUROGRIP TE 1.4</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1495</p>
+        <p>₹ 1095</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 54P TE 1.4 - TVS EUROGRIP TE 1.4', 1095.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 54P TE 1.4 - TVS EUROGRIP TE 1.4', 1095.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 TVS EUROGRIP DURAPRO TEG 5PLY 54P">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>80/100-18 TVS EUROGRIP DURAPRO TEG 5PLY 54P</h3>
+        <h6>TVS EUROGRIP DURAPRO TEG 5PLY 54P</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1564</p>
+        <p>₹ 1125</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 TVS EUROGRIP DURAPRO TEG 5PLY 54P - TVS EUROGRIP DURAPRO TEG 5PLY 54P', 1125.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 TVS EUROGRIP DURAPRO TEG 5PLY 54P - TVS EUROGRIP DURAPRO TEG 5PLY 54P', 1125.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 54P ATT525 TBL">
+        <img src="assets/ATT525.jpg" alt="Product Image">
+        <h3>80/100-18 54P ATT525 TBL</h3>
+        <h6>TVS EUROGRIP ATT525 (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1490</p>
+        <p>₹ 1125</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 54P ATT525 TBL - TVS EUROGRIP ATT525 (TBL)', 1125.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 54P ATT525 TBL - TVS EUROGRIP ATT525 (TBL)', 1125.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 58P ATT 455R TBL">
+        <img src="assets/ATT455R.jpg" alt="Product Image">
+        <h3>80/100-18 58P ATT 455R TBL</h3>
+        <h6>TVS EUROGRIP ATT 455R (TBL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1565</p>
+        <p>₹ 1140</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 58P ATT 455R TBL - TVS EUROGRIP ATT 455R (TBL)', 1140.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 58P ATT 455R TBL - TVS EUROGRIP ATT 455R (TBL)', 1140.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 54P TVS ATT455R TBL - TEG">
+        <img src="assets/ATT455R.jpg" alt="Product Image">
+        <h3>80/100-18 54P TVS ATT455R TBL - TEG</h3>
+        <h6>TVS EUROGRIP ATT455R (TBL - TEG)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1446</p>
+        <p>₹ 1140</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 54P TVS ATT455R TBL - TEG - TVS EUROGRIP ATT455R (TBL - TEG)', 1140.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 54P TVS ATT455R TBL - TEG - TVS EUROGRIP ATT455R (TBL - TEG)', 1140.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 TVS EUROGRIP DURAPRO 54P">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>80/100-18 TVS EUROGRIP DURAPRO 54P</h3>
+        <h6>TVS EUROGRIP DURAPRO 54P</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Burst</p>
+        <p>Price with Discount: 1416</p>
+        <p>₹ 1140</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 TVS EUROGRIP DURAPRO 54P - TVS EUROGRIP DURAPRO 54P', 1140.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 TVS EUROGRIP DURAPRO 54P - TVS EUROGRIP DURAPRO 54P', 1140.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 47P ATT555F TBL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>80/100-18 47P ATT555F TBL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:1375-23%</p>
+        <p>₹ 1060</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 47P ATT555F TBL - TEG', 1060.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 47P ATT555F TBL - TEG', 1060.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 M/C 47P ATT625 TL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>80/100-18 M/C 47P ATT625 TL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:1315-23%</p>
+        <p>₹ 1012</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 M/C 47P ATT625 TL - TEG', 1012.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 M/C 47P ATT625 TL - TEG', 1012.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="80/100-18 54P REINF JUMBO XT TL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>80/100-18 54P REINF JUMBO XT TL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:1867-23%</p>
+        <p>₹ 1437</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('80/100-18 54P REINF JUMBO XT TL - TEG', 1437.00)">Add to Cart</button>
+        <button onclick="buyNow('80/100-18 54P REINF JUMBO XT TL - TEG', 1437.00)">Buy Now</button>
+    </div>
+    
+    <div class="product-item" data-name="90/90-17 49P ATT455F TBL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>90/90-17 49P ATT455F TBL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:1532-23%</p>
+        <p>₹ 1180</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('90/90-17 49P ATT455F TBL - TEG', 1180.00)">Add to Cart</button>
+        <button onclick="buyNow('90/90-17 49P ATT455F TBL - TEG', 1180.00)">Buy Now</button>
+    </div>
+    <div class="product-item" data-name="90/90-17 49P EEG DURATRAIL EB+ TL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>90/90-17 49P EEG DURATRAIL EB+ TL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('90/90-17 49P EEG DURATRAIL EB+ TL', .00)">Add to Cart</button>
+        <button onclick="buyNow('90/90-17 49P EEG DURATRAIL EB+ TL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="90/90-17 M 49P TBL ATT 725">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>90/90-17 M 49P TBL ATT 725</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('90/90-17 M 49P TBL ATT 725', .00)">Add to Cart</button>
+        <button onclick="buyNow('90/90-17 M 49P TBL ATT 725', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="90/90-17 56P REINF ATT725R TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>90/90-17 56P REINF ATT725R TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('90/90-17 56P REINF ATT725R TBL', .00)">Add to Cart</button>
+        <button onclick="buyNow('90/90-17 56P REINF ATT725R TBL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="90/90-17 49P FORTUNA TUBELESS">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>90/90-17 49P FORTUNA TUBELESS</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('90/90-17 49P FORTUNA TUBELESS', .00)">Add to Cart</button>
+        <button onclick="buyNow('90/90-17 49P FORTUNA TUBELESS', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="90/90-18 51P ATT230R TBL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>90/90-18 51P ATT230R TBL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('90/90-18 51P ATT230R TBL - TEG', .00)">Add to Cart</button>
+        <button onclick="buyNow('90/90-18 51P ATT230R TBL - TEG', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="90/90-18 51P JUMBO-GT TBL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>90/90-18 51P JUMBO-GT TBL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('90/90-18 51P JUMBO-GT TBL - TEG', .00)">Add to Cart</button>
+        <button onclick="buyNow('90/90-18 51P JUMBO-GT TBL - TEG', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/80-17 52P TEG ATT 230F TUBELESS">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/80-17 52P TEG ATT 230F TUBELESS</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/80-17 52P TEG ATT 230F TUBELESS', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/80-17 52P TEG ATT 230F TUBELESS', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-17 55P PANCER POLYX TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-17 55P PANCER POLYX TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-17 55P PANCER POLYX TBL', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-17 55P PANCER POLYX TBL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-17 TEG ATT 750 M 55P TBL (E)">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-17 TEG ATT 750 M 55P TBL (E)</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-17 TEG ATT 750 M 55P TBL (E)', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-17 TEG ATT 750 M 55P TBL (E)', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-17 55P ATT 455R TEG TL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-17 55P ATT 455R TEG TL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-17 55P ATT 455R TEG TL', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-17 55P ATT 455R TEG TL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-17 Jumbo GT TL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-17 Jumbo GT TL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-17 Jumbo GT TL - TEG', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-17 Jumbo GT TL - TEG', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-18 56P ATT750KE TL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-18 56P ATT750KE TL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-18 56P ATT750KE TL',.00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-18 56P ATT750KE TL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-18 56P PANCER POLY-X TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-18 56P PANCER POLY-X TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-18 56P PANCER POLY-X TBL', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-18 56P PANCER POLY-X TBL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-18 ATT455R TL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-18 ATT455R TL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-18 ATT455R TL', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-18 ATT455R TL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="100/90-18 M/C 56P JUMBO GT TL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>100/90-18 M/C 56P JUMBO GT TL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('100/90-18 M/C 56P JUMBO GT TL - TEG', .00)">Add to Cart</button>
+        <button onclick="buyNow('100/90-18 M/C 56P JUMBO GT TL - TEG', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="110/70-17 54S PROTORQ-CF TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>110/70-17 54S PROTORQ-CF TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('110/70-17 54S PROTORQ-CF TBL', .00)">Add to Cart</button>
+        <button onclick="buyNow('110/70-17 54S PROTORQ-CF TBL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="110/80-17 57P ATT 555R TBL - METAL CONVEX">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>110/80-17 57P ATT 555R TBL - METAL CONVEX</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('110/80-17 57P ATT 555R TBL - METAL CONVEX',.00)">Add to Cart</button>
+        <button onclick="buyNow('110/80-17 57P ATT 555R TBL - METAL CONVEX', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="110/80-17 57P TEG ATT455R TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>110/80-17 57P TEG ATT455R TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('110/80-17 57P TEG ATT455R TBL', .00)">Add to Cart</button>
+        <button onclick="buyNow('110/80-17 57P TEG ATT455R TBL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="110/80-17 57P EEG DURATRAIL EB+ TL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>110/80-17 57P EEG DURATRAIL EB+ TL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('110/80-17 57P EEG DURATRAIL EB+ TL', .00)">Add to Cart</button>
+        <button onclick="buyNow('110/80-17 57P EEG DURATRAIL EB+ TL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="110/90-18 61P SPORTORQ -ZR TL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>110/90-18 61P SPORTORQ -ZR TL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('110/90-18 61P SPORTORQ -ZR TL', .00)">Add to Cart</button>
+        <button onclick="buyNow('110/90-18 61P SPORTORQ -ZR TL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="120/80-16 60P JUMBO TEG POLYX TBL (EXP)">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>120/80-16 60P JUMBO TEG POLYX TBL (EXP)</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('120/80-16 60P JUMBO TEG POLYX TBL (EXP)', .00)">Add to Cart</button>
+        <button onclick="buyNow('120/80-16 60P JUMBO TEG POLYX TBL (EXP)', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="120/80-17 61P PANCER POLYX TBL - TEG">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>120/80-17 61P PANCER POLYX TBL - TEG</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('120/80-17 61P PANCER POLYX TBL - TEG', .00)">Add to Cart</button>
+        <button onclick="buyNow('120/80-17 61P PANCER POLYX TBL - TEG', .00)">Buy Now</button>
+    </div>
+
+    
+    <div class="product-item" data-name="130/70-17 62P ATT230R TBL 2035 2,605">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>130/70-17 62P ATT230R TBL 2035 2,605</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:2,605</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('130/70-17 62P ATT230R TBL 2035 2,605', 2605.00)">Add to Cart</button>
+        <button onclick="buyNow('130/70-17 62P ATT230R TBL 2035 2,605', 2605.00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="130/70-17 62P ATT455R TBL 1779 2,277">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>130/70-17 62P ATT455R TBL 1779 2,277</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:2,277</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('130/70-17 62P ATT455R TBL 1779 2,277', 2277.00)">Add to Cart</button>
+        <button onclick="buyNow('130/70-17 62P ATT455R TBL 1779 2,277', 2277.00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="130/90-15 66P ATT240R TL EUROGRIP">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>130/90-15 66P ATT240R TL EUROGRIP</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('130/90-15 66P ATT240R TL EUROGRIP', .00)">Add to Cart</button>
+        <button onclick="buyNow('130/90-15 66P ATT240R TL EUROGRIP', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="140/70-17 66P DURAGLIDE RP 240 TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>140/70-17 66P DURAGLIDE RP 240 TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('140/70-17 66P DURAGLIDE RP 240 TBL', .00)">Add to Cart</button>
+        <button onclick="buyNow('140/70-17 66P DURAGLIDE RP 240 TBL', .00)">Buy Now</button>
+    </div>
+
+    <div class="product-item" data-name="140/70-17 66S PROTORQ-CR TBL">
+        <img src="assets/DURAPRO.jpg" alt="Product Image">
+        <h3>140/70-17 66S PROTORQ-CR TBL</h3>
+        <h6>TVS EUROGRIP DURA PRO (TL)</h6>
+        <p>REAR</p>
+        <p>5 Year unconditional warranty for Air</p>
+        <p>18 Months for Cut And Brust</p>
+        <p>Price with Discount:?</p>
+        <p>₹ ?</p>
+        <p>⭐⭐⭐⭐⭐</p>
+        <button onclick="addToCart('140/70-17 66S PROTORQ-CR TBL', .00)">Add to Cart</button>
+        <button onclick="buyNow('140/70-17 66S PROTORQ-CR TBL', .00)">Buy Now</button>
+    </div>
+    
+    <!-- More products can be added here -->
+    
+</div>
+
+<div class="cart" id="cart">
+    <h2>Shopping Cart</h2>
+    <div id="cartItems"></div>
+    <button onclick="openModal('checkoutModal')">Proceed to Checkout</button>
+</div>
+
+
+<footer>
+    &copy; 2024 New Bihar Tyre Service
+</footer>
+
+<div class="go-to-top" onclick="scrollToTop()">Back to Top</div>
+
+<!-- Modals -->
+<div id="checkSizeModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('checkSizeModal')">&times;</span>
+        <h2>Check Size</h2>
+        <p>Enter your tyre size details to find the perfect fit.</p>
+        <!-- Add form or content here -->
+    </div>
+</div>
+
+<div id="accountModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('accountModal')">&times;</span>
+        <h2>Your Account</h2>
+        <p>Manage your orders, payment options, and more.</p>
+        <!-- Add account management links or content here -->
+    </div>
+</div>
+
+<div id="checkoutModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('checkoutModal')">&times;</span>
+        <h2>Checkout</h2>
+        <form id="checkoutForm" onsubmit="placeOrder(event)">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+            <label for="mobile">Mobile Number:</label>
+            <input type="tel" id="mobile" name="mobile" required><br>
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" required><br>
+            <label for="district">District:</label>
+            <input type="text" id="district" name="district" required><br>
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" required><br>
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" required></textarea><br>
+            <label for="payment">Payment Method:</label>
+            <select id="payment" name="payment" required>
+                <option value="cod">Cash on Delivery</option>
+                <option value="online">Online Payment</option>
+            </select><br>
+            <button type="submit">Buy</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+    function addToCart(productName, price) {
+        const product = { name: productName, price: price, quantity: 1 };
+        cart.push(product);
+        alert(productName + " has been added to the cart!");
+        updateCart();
+    }
+
+    function buyNow(productName, price) {
+        addToCart(productName, price);
+        openModal('checkoutModal');
+    }
+
+    function updateCart() {
+        const cartItemsContainer = document.getElementById('cartItems');
+        cartItemsContainer.innerHTML = '';
+        cart.forEach((item, index) => {
+            const cartItemDiv = document.createElement('div');
+            cartItemDiv.className = 'cart-item';
+            cartItemDiv.innerHTML = `
+                <span>${item.name} - ₹${item.price} x ${item.quantity}</span>
+                <button onclick="removeFromCart(${index})">Remove</button>
+            `;
+            cartItemsContainer.appendChild(cartItemDiv);
+        });
+        document.getElementById('cart').style.display = cart.length ? 'block' : 'none';
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function placeOrder(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const mobile = document.getElementById('mobile').value;
+        const state = document.getElementById('state').value;
+        const district = document.getElementById('district').value;
+        const pincode = document.getElementById('pincode').value;
+        const address = document.getElementById('address').value;
+        const payment = document.getElementById('payment').value;
+
+        const order = {
+            name,
+            mobile,
+            state,
+            district,
+            pincode,
+            address,
+            payment,
+            cart,
+            date: new Date().toLocaleString()
+        };
+
+        if (confirm(`Confirm Order Details:\nName: ${name}\nMobile: ${mobile}\nState: ${state}\nDistrict: ${district}\nPincode: ${pincode}\nAddress: ${address}\nPayment: ${payment}\n\nCart Items:\n${cart.map(item => item.name + ' - ₹' + item.price + ' x ' + item.quantity).join('\n')}`)) {
+            orders.push(order);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            alert("Order placed successfully!");
+            cart = [];
+            updateCart();
+            closeModal('checkoutModal');
+        }
+    }
+
+    function viewCart() {
+        updateCart();
+        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function viewAdmin() {
+        const adminOrdersContainer = document.getElementById('adminOrders');
+        adminOrdersContainer.innerHTML = '';
+        orders.forEach((order, index) => {
+            const adminOrderDiv = document.createElement('div');
+            adminOrderDiv.className = 'admin-item';
+            adminOrderDiv.innerHTML = `
+                <h3>Order ${index + 1} - ${order.date}</h3>
+                <p>Name: ${order.name}</p>
+                <p>Mobile: ${order.mobile}</p>
+                <p>State: ${order.state}</p>
+                <p>District: ${order.district}</p>
+                <p>Pincode: ${order.pincode}</p>
+                <p>Address: ${order.address}</p>
+                <p>Payment: ${order.payment}</p>
+                <p>Items:</p>
+                <ul>
+                    ${order.cart.map(item => `<li>${item.name} - ₹${item.price} x ${item.quantity}</li>`).join('')}
+                </ul>
+                <button onclick="printBill(${index})">Print Bill</button>
+            `;
+            adminOrdersContainer.appendChild(adminOrderDiv);
+        });
+        document.getElementById('admin').style.display = 'block';
+        document.getElementById('admin').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function printBill(index) {
+        const order = orders[index];
+        let printContent = `
+            <h3>Order ${index + 1} - ${order.date}</h3>
+            <p>Name: ${order.name}</p>
+            <p>Mobile: ${order.mobile}</p>
+            <p>State: ${order.state}</p>
+            <p>District: ${order.district}</p>
+            <p>Pincode: ${order.pincode}</p>
+            <p>Address: ${order.address}</p>
+            <p>Payment: ${order.payment}</p>
+            <p>Items:</p>
+            <ul>
+                ${order.cart.map(item => `<li>${item.name} - ₹${item.price} x ${item.quantity}</li>`).join('')}
+            </ul>
+        `;
+        let printWindow = window.open('', '', 'height=600,width=800');
+        printWindow.document.write('<html><head><title>Print Bill</title>');
+        printWindow.document.write('</head><body >');
+        printWindow.document.write(printContent);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function searchProducts() {
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const products = document.querySelectorAll('.product-item');
+
+        products.forEach(product => {
+            const productName = product.getAttribute('data-name').toLowerCase();
+            product.style.display = productName.includes(searchInput) ? 'block' : 'none';
+        });
+    }
+
+    function handleSearchKeyPress(event) {
+        if (event.key === 'Enter') {
+            searchProducts();
+        }
+    }
+
+    function showHome() {
+        alert('Welcome to the New Bihar Tyre Service!');
+    }
+</script>
+</body>
+</html>

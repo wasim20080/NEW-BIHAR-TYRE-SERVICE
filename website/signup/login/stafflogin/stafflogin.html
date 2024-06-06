@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(216, 144, 11);
+        }
+        form {
+            background: rgb(255, 166, 0);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgb(255, 0, 0);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="text"], input[type="number"], input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid orangered;
+            border-radius: 4px;
+        }
+        button {
+            background-color: orangered;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+        button a {
+            color: white;
+            text-decoration: none;
+        }
+        button:hover {
+            background-color: rgb(255, 115, 0);
+        }
+    </style>
+</head>
+<body>
+    <form action="action.php" method="post">
+        <input type="number" name="staff_id" placeholder="Enter Your ID" required>
+        <input type="text" name="username" placeholder="Enter Your Username" required>
+        <input type="password" name="password" placeholder="Enter Your Password" required>
+        <input type="number" name="mobile" placeholder="Enter Your Number" required>
+        <button type="button" onclick="sendOTP()">Send OTP</button>
+        <input type="number" name="otp" placeholder="Enter Your 6 Digit OTP" required>
+        <button type="submit"><a href="category.html" target="main">Login</a></button>
+        
+    </form>
+    <script>
+        function sendOTP() {
+            // Logic to send OTP to the provided mobile number
+            alert("OTP sent to your mobile number!");
+        }
+    </script>
+</body>
+</html>

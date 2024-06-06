@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Bihar Tyre Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        
+    </style>
+</head>
+<body>
+    <header>
+        NEW BIHAR TYRE SERVICE
+    </header>
+    
+    <!-- Added a container for admin orders -->
+    <div id="admin" class="admin">
+        <h2>Admin Orders</h2>
+        <div id="adminOrders"></div>
+    </div>
+    
+    <div class="go-to-top" onclick="scrollToTop()">Back to Top</div>
+    
+    <script>
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+        // Function to display orders in the admin section
+        function viewAdmin() {
+            const adminOrdersContainer = document.getElementById('adminOrders');
+            adminOrdersContainer.innerHTML = ''; // Clear previous orders
+            orders.forEach((order, index) => {
+                const adminOrderDiv = document.createElement('div');
+                adminOrderDiv.className = 'admin-item';
+                adminOrderDiv.innerHTML = `
+                    <h3>Order ${index + 1} - ${order.date}</h3>
+                    <p>Order ID: ${order.orderId}</p>
+                    <p>Name: ${order.name}</p>
+                    <p>Mobile: ${order.mobile}</p>
+                    <p>State: ${order.state}</p>
+                    <p>District: ${order.district}</p>
+                    <p>Pincode: ${order.pincode}</p>
+                    <p>Address: ${order.address}</p>
+                    <p>Payment: ${order.payment}</p>
+                    <p>Items:</p>
+                    <ul>
+                        ${order.cart.map(item => `<li>${item.name} - ₹${item.price} x ${item.quantity}</li>`).join('')}
+                    </ul>
+                    <button onclick="editOrder(${index})">Edit</button>
+                    <button onclick="deleteOrder(${index})">Delete</button>
+                    <button onclick="printBill(${index})">Print Bill</button>
+                `;
+                adminOrdersContainer.appendChild(adminOrderDiv);
+            });
+        }
+
+        // Function to save orders in local storage
+        function saveOrders() {
+            localStorage.setItem('orders', JSON.stringify(orders));
+        }
+
+        // Function to add a new order
+        function addOrder(order) {
+            orders.push(order);
+            saveOrders();
+            viewAdmin(); // Refresh the admin section after adding an order
+        }
+
+        // Function to edit an order
+        function editOrder(index) {
+            const orderId = prompt("Enter new Order ID:");
+            if (orderId) {
+                orders[index].orderId = orderId;
+                saveOrders(); // Save the updated order
+                viewAdmin(); // Refresh the admin section
+            }
+        }
+
+        // Function to delete an order
+        function deleteOrder(index) {
+            if (confirm("Are you sure you want to delete this order?")) {
+                orders.splice(index, 1);
+                saveOrders(); // Save the updated orders after deletion
+                viewAdmin(); // Refresh the admin section
+            }
+        }
+
+        // Function to print a bill
+        function printBill(index) {
+            const order = orders[index];
+            let printContent = `
+                <h3>Order ${index + 1} - ${order.date}</h3>
+                <p>Order ID: ${order.orderId}</p>
+                <p>Name: ${order.name}</p>
+                <p>Mobile: ${order.mobile}</p>
+                <p>State: ${order.state}</p>
+                <p>District: ${order.district}</p>
+                <p>Pincode: ${order.pincode}</p>
+                <p>Address: ${order.address}</p>
+                <p>Payment: ${order.payment}</p>
+                <p>Items:</p>
+                <ul>
+                    ${order.cart.map(item => `<li>${item.name} - ₹${item.price} x ${item.quantity}</li>`).join('')}
+                </ul>
+            `;
+            let printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Print Bill</title>');
+            printWindow.document.write('</head><body >');
+            printWindow.document.write(printContent);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        // Function to scroll to the top of the page
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Call viewAdmin() initially to display orders when the page loads
+        viewAdmin();
+    </script>
+</body>
+</html>

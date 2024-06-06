@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Bihar Tyre Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(226, 213, 189);
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #wheel {
+            width: 80%;
+            max-width: 300px;
+            height: auto;
+            animation: rotateFast 2s linear forwards;
+        }
+
+        @keyframes rotateFast {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(720deg); }
+        }
+
+        @keyframes vibrate {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-2px, 2px); }
+            50% { transform: translate(2px, -2px); }
+            75% { transform: translate(-2px, -2px); }
+            100% { transform: translate(2px, 2px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="wheel" src="website/wheel-removebg-preview.png" alt="Wheel">
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const wheel = document.getElementById('wheel');
+
+            function startAnimation() {
+                // After the fast rotation, vibrate the wheel
+                setTimeout(() => {
+                    wheel.style.animation = 'vibrate 1s linear';
+
+                    setTimeout(() => {
+                        // Redirect to website after vibration
+                        window.location.href = 'website/website.html'; // Change to your website URL
+                    }, 1000);
+                }, 2000); // Adjust timing to match the end of the fast rotation
+            }
+
+            startAnimation();
+        });
+    </script>
+</body>
+</html>

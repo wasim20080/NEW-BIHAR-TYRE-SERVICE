@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: rgb(216, 144, 11);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            background: rgb(255, 166, 0);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgb(255, 0, 0);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        input[type="text"], input[type="number"], select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid orangered;
+            border-radius: 5px;
+            display: block;
+        }
+        button {
+            background-color: orangered;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            width: calc(100% - 20px);
+            margin: 10px 0;
+            transition: background-color 0.2s;
+        }
+        button:hover {
+            background-color: rgb(255, 115, 0);
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 3px;
+            border-collapse: collapse;
+            background-color: #e07306;
+            color: rgb(255, 255, 255);
+        }
+        table, th, td {
+            border: 1px solid #d3c187;
+            padding: 10px;
+            text-align: left;
+        }
+        table tbody {
+            display: block;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        table thead, table tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 200px;
+            padding: 10px;
+            margin-right: 10px;
+            border: 3px solid #be8f02;
+            border-radius: 200px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>ADD PRODUCT</h2>
+    </header>
+    <div class="search-bar">
+        <input type="number" id="searchProductId" placeholder="Search by Product ID">
+        <button onclick="searchProduct()">Search</button>
+    </div>
+    <div class="form-container">
+        <form id="productForm">
+            <input type="text" name="productName" placeholder="Product Name" required>
+            <input type="number" name="productId" placeholder="Product ID" required>
+            <select name="category" id="category" required>
+                <option value="PCS">PCS</option>
+                <option value="LITER">LITER</option>
+                <option value="KG">KG</option>
+            </select>
+            <input type="number" name="costPrice" placeholder="Cost Price" required>
+            <input type="number" name="sellingPrice" placeholder="Selling Price" required>
+            <input type="number" name="quantity" placeholder="Quantity" required>
+            <button type="button" onclick="addProduct()">ADD PRODUCT</button>
+            <input type="number" name="deleteProductId" placeholder="Product ID to Delete" required>
+            <button type="button" onclick="deleteProduct()">DELETE PRODUCT</button>
+        </form>
+    </div>
+
+    <h2>Recent Products</h2>
+    <table id="recentProductsTable">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Product ID</th>
+                <th>Category</th>
+                <th>Cost Price</th>
+                <th>Selling Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Recent products will be added here dynamically -->
+        </tbody>
+    </table>
+    <button onclick="exportToExcel()">Export to Excel</button>
+
+    <script>
+        const recentProducts = [];
+
+        function addProduct() {
+            const form = document.getElementById('productForm');
+            const productName = form.elements['productName'].value;
+            const productId = form.elements['productId'].value;
+            const category = form.elements['category'].value;
+            const costPrice = form.elements['costPrice'].value;
+            const sellingPrice = form.elements['sellingPrice'].value;
+            const quantity = form.elements['quantity'].value;
+
+            const product = {
+                productName,
+                productId,
+                category,
+                costPrice,
+                sellingPrice,
+                quantity
+            };
+
+            recentProducts.push(product);
+            updateProductTable();
+            form.reset();
+        }
+
+        function deleteProduct() {
+            const form = document.getElementById('productForm');
+            const deleteProductId = form.elements['deleteProductId'].value;
+
+            const index = recentProducts.findIndex(product => product.productId == deleteProductId);
+            if (index !== -1) {
+                recentProducts.splice(index, 1);
+                updateProductTable();
+            } else {
+                alert("Product not found");
+            }
+
+            form.reset();
+        }
+
+        function updateProductTable() {
+            const tbody = document.getElementById('recentProductsTable').querySelector('tbody');
+            tbody.innerHTML = '';
+
+            recentProducts.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.productName}</td>
+                    <td>${product.productId}</td>
+                    <td>${product.category}</td>
+                    <td>${product.costPrice}</td>
+                    <td>${product.sellingPrice}</td>
+                    <td>${product.quantity}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function searchProduct() {
+            const searchProductId = document.getElementById('searchProductId').value;
+            const product = recentProducts.find(product => product.productId == searchProductId);
+            if (product) {
+                alert(`Product Found: \nName: ${product.productName}\nID: ${product.productId}\nCategory: ${product.category}\nCost Price: ${product.costPrice}\nSelling Price: ${product.sellingPrice}\nQuantity: ${product.quantity}`);
+            } else {
+                alert("Product not found");
+            }
+        }
+
+        function exportToExcel() {
+            let table = document.getElementById('recentProductsTable');
+            let rows = table.rows;
+
+            let csvContent = "";
+            for (let i = 0; i < rows.length; i++) {
+                let row = [];
+                let cols = rows[i].querySelectorAll('td, th');
+                for (let j = 0; j < cols.length; j++) {
+                    row.push(cols[j].innerText);
+                }
+                csvContent += row.join(",") + "\n";
+            }
+
+            let blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            let link = document.createElement("a");
+            let url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "recent_products.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

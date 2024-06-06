@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEO Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(216, 144, 11);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            background: rgb(255, 166, 0);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgb(255, 0, 0);
+            width: 300px;
+            text-align: center;
+        }
+        input[type="number"], input[type="text"], input[type="email"], input[type="password"], input[type="otp"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid orangered;
+            border-radius: 4px;
+        }
+        button {
+            background-color: orangered;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+        button a {
+            color: white;
+            text-decoration: none;
+        }
+        button:hover {
+            background-color:rgb(255, 115, 0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3></h3>
+    </header>
+    <form action="action.php" method="post">
+        <input type="number" name="shop_id" placeholder="Shop ID" required>
+        <input type="password" name="shop_password" placeholder="Shop Password" required>
+        <input type="email" name="email" placeholder="Enter Email ID" required>
+        <button type="button" onclick="sendOTP()">Send OTP</button>
+        <input type="number" name="email_otp" placeholder="Enter 6 Digit OTP" required>
+        <input type="number" name="mobile" placeholder="Enter Mobile Number" required>
+        <button type="button" onclick="sendOTP()">Send OTP</button>
+        <input type="number" name="mobile_otp" placeholder="Enter 6 Digit OTP" required>
+        <button type="submit">Login</button>
+    </form>
+    <script>
+        function sendOTP() {
+            // Logic to send OTP to the provided mobile number
+            alert("OTP sent to your mobile number or Email!");
+        }
+    </script>
+</body>
+</html>

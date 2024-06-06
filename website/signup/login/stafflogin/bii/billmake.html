@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: rgb(216, 144, 11);
+            margin: 0;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        main {
+            background: rgb(255, 166, 0);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgb(255, 0, 0);
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="number"], select, textarea {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid orangered;
+            border-radius: 10px;
+            display: block;
+        }
+        textarea {
+            height: 100px;
+        }
+        .address-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+        pre {
+            text-align: left;
+            white-space: pre-wrap;
+            font-family: inherit;
+        }
+        .a {
+            display: block;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: orangered;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: inline-block;
+            transition: background-color 0.2s;
+        }
+        a:hover {
+            background-color: rgb(255, 115, 0);
+        }
+        .recent-bills {
+            max-height: 200px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
+            background: rgb(198, 167, 142);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgb(255, 0, 0);
+            padding: 10px;
+        }
+        .recent-bills table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .recent-bills th, .recent-bills td {
+            border: 2px solid #cf9518;
+            padding: 8px;
+        }
+        .recent-bills th {
+            background-color: #bba12e;
+            color: white;
+        }
+        .button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: orangered;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .button:hover {
+            background-color: rgb(255, 115, 0);
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #billFormat, #billFormat * {
+                visibility: visible;
+            }
+            #billFormat {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NEW BIHAR TYRE SERVICE</h1>
+        <p>GSTIN: 10APEPA9335D1ZL</p>
+    </header>
+    <main>
+        <form id="billingForm">
+            <input type="number" id="billNo" name="billNo" placeholder="Bill No" required>
+            <input type="text" name="username" placeholder="Enter Name" required>
+            <input type="number" name="mobile" placeholder="Enter Mobile Number" required>
+            <div id="orderIds">
+                <input type="text" name="order_id[]" placeholder="Order ID" required>
+            </div>
+            <button type="button" class="button" onclick="addOrderId()">Add More Order ID</button>
+            <div id="stencilNumbers">
+                <input type="number" name="stencil_number[]" placeholder="Stencil Number" required>
+            </div>
+            <button type="button" class="button" onclick="addStencilNumber()">Add More Stencil Number</button>
+            <div id="sellingPrices">
+                <input type="number" name="selling_price[]" placeholder="Selling Price" required>
+            </div>
+            <button type="button" class="button" onclick="addSellingPrice()">Add More Selling Price</button>
+            <div id="productIds">
+                <input type="number" name="product_id[]" placeholder="Product ID" required>
+            </div>
+            <button type="button" class="button" onclick="addProductId()">Add More Product ID</button>
+            <select name="state" required>
+                <option value="">Select State</option>
+                <!-- List of states -->
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chattisgarh">Chattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+            </select>
+            <input type="text" name="city" placeholder="Enter City Name" required>
+            <input type="number" name="zip" placeholder="Enter ZIP CODE" required>
+            <textarea name="address" placeholder="Enter Your Proper Address" required></textarea>
+            <input type="number" id="cgst" name="cgst" placeholder="CGST (%)" step="0.01">
+            <input type="number" id="sgst" name="sgst" placeholder="SGST (%)" step="0.01">
+            <button type="button" class="button" onclick="submitForm()">Submit</button>
+        </form>
+    </main>
+    <div class="address-section">
+        <h3>Shipped From</h3>
+        <pre>
+NEW BIHAR TYRE SERVICE
+KOIRIYA TOLA, RAXAUL
+EAST CHAMPARAN, BIHAR
+845305
+7717756142, 9934968530
+newbihartyreservices@gmail.com
+        </pre>
+    </div>
+    <div>
+        <input type="number" id="searchBillNo" placeholder="Search by Bill No">
+        <button class="button" onclick="searchBill()">Search</button>
+    </div>
+    <div class="recent-bills">
+        <h3>Recent Bills</h3>
+        <table id="recentBillsTable">
+            <thead>
+                <tr>
+                    <th>Bill No</th>
+                    <th>Product IDs</th>
+                    <th>Order IDs</th>
+                    <th>Mobile</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Recent bills will be added here -->
+            </tbody>
+        </table>
+    </div>
+    <a href="#" id="exportButton" class="a" onclick="exportToExcel()">EXPORT TO EXCEL</a>
+
+    <!-- Bill Format Section -->
+    <div id="billFormat" style="display:none;">
+        <h1>NEW BIHAR TYRE SERVICE</h1>
+        <p>GSTIN: 10APEPA9335D1ZL</p>
+        <p><strong>Bill No:</strong> <span id="displayBillNo"></span></p>
+        <p><strong>Order IDs:</strong> <span id="displayOrderIds"></span></p>
+        <p><strong>Product IDs:</strong> <span id="displayProductIds"></span></p>
+        <p><strong>Name:</strong> <span id="displayUsername"></span></p>
+        <p><strong>Mobile:</strong> <span id="displayMobile"></span></p>
+        <p><strong>State:</strong> <span id="displayState"></span></p>
+        <p><strong>City:</strong> <span id="displayCity"></span></p>
+        <p><strong>ZIP:</strong> <span id="displayZip"></span></p>
+        <p><strong>Address:</strong> <span id="displayAddress"></span></p>
+        <p><strong>Selling Prices:</strong> <span id="displaySellingPrices"></span></p>
+        <p><strong>Total Amount:</strong> <span id="displayTotalAmount"></span></p>
+        <p><strong>CGST:</strong> <span id="displayCgst"></span>%</p>
+        <p><strong>SGST:</strong> <span id="displaySgst"></span>%</p>
+        <p><strong>Total with GST:</strong> <span id="displayTotalWithGst"></span></p>
+        <h3>Shipped From</h3>
+        <pre>
+KOIRIYA TOLA, RAXAUL EAST CHAMPARAN, BIHAR 845305
+7717756142, 9934968530
+email:newbihartyreservices@gmail.com
+        </pre>
+    </div>
+
+    <script>
+        let bills = [];
+
+        function submitForm() {
+            const form = document.getElementById('billingForm');
+            const orderIds = Array.from(form['order_id[]']).map(input => input.value);
+            const stencilNumbers = Array.from(form['stencil_number[]']).map(input => input.value);
+            const sellingPrices = Array.from(form['selling_price[]']).map(input => parseFloat(input.value));
+            const productIds = Array.from(form['product_id[]']).map(input => input.value);
+            const totalAmount = sellingPrices.reduce((acc, price) => acc + price, 0);
+            const cgst = parseFloat(form.cgst.value) || 0;
+            const sgst = parseFloat(form.sgst.value) || 0;
+            const totalWithGst = totalAmount + (totalAmount * cgst / 100) + (totalAmount * sgst / 100);
+
+            const bill = {
+                billNo: form.billNo.value,
+                username: form.username.value,
+                mobile: form.mobile.value,
+                orderIds,
+                stencilNumbers,
+                sellingPrices,
+                productIds,
+                totalAmount,
+                cgst,
+                sgst,
+                totalWithGst,
+                state: form.state.value,
+                city: form.city.value,
+                zip: form.zip.value,
+                address: form.address.value
+            };
+            bills.push(bill);
+            displayRecentBills();
+            form.reset();
+        }
+
+        function addOrderId() {
+            const orderIdsDiv = document.getElementById('orderIds');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'order_id[]';
+            input.placeholder = 'Order ID';
+            input.required = true;
+            orderIdsDiv.appendChild(input);
+        }
+
+        function addStencilNumber() {
+            const stencilNumbersDiv = document.getElementById('stencilNumbers');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.name = 'stencil_number[]';
+            input.placeholder = 'Stencil Number';
+            input.required = true;
+            stencilNumbersDiv.appendChild(input);
+        }
+
+        function addSellingPrice() {
+            const sellingPricesDiv = document.getElementById('sellingPrices');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.name = 'selling_price[]';
+            input.placeholder = 'Selling Price';
+            input.required = true;
+            sellingPricesDiv.appendChild(input);
+        }
+
+        function addProductId() {
+            const productIdsDiv = document.getElementById('productIds');
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.name = 'product_id[]';
+            input.placeholder = 'Product ID';
+            input.required = true;
+            productIdsDiv.appendChild(input);
+        }
+
+        function displayRecentBills() {
+            const tbody = document.getElementById('recentBillsTable').getElementsByTagName('tbody')[0];
+            tbody.innerHTML = '';
+            bills.forEach(bill => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${bill.billNo}</td>
+                    <td>${bill.productIds.join(', ')}</td>
+                    <td>${bill.orderIds.join(', ')}</td>
+                    <td>${bill.mobile}</td>
+                    <td>
+                        <button class="button" onclick="editBill(${bill.billNo})">Edit</button>
+                        <button class="button" onclick="printBill(${bill.billNo})">Print</button>
+                        <button class="button" onclick="deleteBill(${bill.billNo})">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        function searchBill() {
+            const searchBillNo = document.getElementById('searchBillNo').value;
+            const bill = bills.find(b => b.billNo == searchBillNo);
+            if (bill) {
+                alert(`Bill No: ${bill.billNo}\nProduct IDs: ${bill.productIds.join(', ')}\nOrder IDs: ${bill.orderIds.join(', ')}\nMobile: ${bill.mobile}`);
+            } else {
+                alert('Bill not found');
+            }
+        }
+
+        function editBill(billNo) {
+            const bill = bills.find(b => b.billNo == billNo);
+            if (bill) {
+                const form = document.getElementById('billingForm');
+                form.billNo.value = bill.billNo;
+                form.username.value = bill.username;
+                form.mobile.value = bill.mobile;
+                form.state.value = bill.state;
+                form.city.value = bill.city;
+                form.zip.value = bill.zip;
+                form.address.value = bill.address;
+                form.cgst.value = bill.cgst;
+                form.sgst.value = bill.sgst;
+
+                const orderIdsDiv = document.getElementById('orderIds');
+                orderIdsDiv.innerHTML = '';
+                bill.orderIds.forEach(orderId => {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.name = 'order_id[]';
+                    input.value = orderId;
+                    orderIdsDiv.appendChild(input);
+                });
+
+                const stencilNumbersDiv = document.getElementById('stencilNumbers');
+                stencilNumbersDiv.innerHTML = '';
+                bill.stencilNumbers.forEach(stencilNumber => {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.name = 'stencil_number[]';
+                    input.value = stencilNumber;
+                    stencilNumbersDiv.appendChild(input);
+                });
+
+                const sellingPricesDiv = document.getElementById('sellingPrices');
+                sellingPricesDiv.innerHTML = '';
+                bill.sellingPrices.forEach(sellingPrice => {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.name = 'selling_price[]';
+                    input.value = sellingPrice;
+                    sellingPricesDiv.appendChild(input);
+                });
+
+                const productIdsDiv = document.getElementById('productIds');
+                productIdsDiv.innerHTML = '';
+                bill.productIds.forEach(productId => {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.name = 'product_id[]';
+                    input.value = productId;
+                    productIdsDiv.appendChild(input);
+                });
+
+                deleteBill(billNo);
+            }
+        }
+
+        function printBill(billNo) {
+            const bill = bills.find(b => b.billNo == billNo);
+            if (bill) {
+                document.getElementById('displayBillNo').textContent = bill.billNo;
+                document.getElementById('displayOrderIds').textContent = bill.orderIds.join(', ');
+                document.getElementById('displayProductIds').textContent = bill.productIds.join(', ');
+                document.getElementById('displayUsername').textContent = bill.username;
+                document.getElementById('displayMobile').textContent = bill.mobile;
+                document.getElementById('displayState').textContent = bill.state;
+                document.getElementById('displayCity').textContent = bill.city;
+                document.getElementById('displayZip').textContent = bill.zip;
+                document.getElementById('displayAddress').textContent = bill.address;
+                document.getElementById('displaySellingPrices').textContent = bill.sellingPrices.join(', ');
+                document.getElementById('displayTotalAmount').textContent = bill.totalAmount.toFixed(2);
+                document.getElementById('displayCgst').textContent = bill.cgst.toFixed(2);
+                document.getElementById('displaySgst').textContent = bill.sgst.toFixed(2);
+                document.getElementById('displayTotalWithGst').textContent = bill.totalWithGst.toFixed(2);
+
+                const billFormat = document.getElementById('billFormat');
+                billFormat.style.display = 'block';
+                window.print();
+                billFormat.style.display = 'none';
+            }
+        }
+
+        function deleteBill(billNo) {
+            bills = bills.filter(b => b.billNo != billNo);
+            displayRecentBills();
+        }
+
+    function exportToExcel() {
+        let table = document.getElementById('recentBillsTable');
+        let rows = Array.from(table.rows);
+        let csvContent = rows.map(row => Array.from(row.cells).map(cell => cell.innerText).join(',')).join('\n');
+
+        let csvFile = new Blob([csvContent], { type: 'text/csv' });
+        let downloadLink = document.createElement('a');
+        downloadLink.download = 'recent_bills.csv';
+        downloadLink.href = window.URL.createObjectURL(csvFile);
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    function downloadPDF() {
+        const searchBillNo = document.getElementById('searchBillNo').value;
+        const bill = bills.find(b => b.billNo == searchBillNo);
+        if (bill) {
+            const billDetails = `
+                Bill No: ${bill.billNo}\n
+                Order IDs: ${bill.order_ids.join(', ')}\n
+                Stencil Numbers: ${bill.stencil_numbers.join(', ')}\n
+                Selling Prices: ${bill.selling_prices.join(', ')}\n
+                Product IDs: ${bill.product_ids.join(', ')}\n
+                Name: ${bill.username}\n
+                Mobile: ${bill.mobile}\n
+                State: ${bill.state}\n
+                City: ${bill.city}\n
+                ZIP: ${bill.zip}\n
+                Address: ${bill.address}\n
+                Shipped From: KOIRIYA TOLA, RAXAUL EAST CHAMPARAN, BIHAR 845305\n
+                7717756142, 9934968530\n
+                email:newbihartyreservices@gmail.com
+            `;
+
+            const pdfWindow = window.open('', '', 'height=700,width=700');
+            pdfWindow.document.write('<html><head><title>Bill PDF</title></head><body>');
+            pdfWindow.document.write('<pre>' + billDetails + '</pre>');
+            pdfWindow.document.write('</body></html>');
+            pdfWindow.document.close();
+            pdfWindow.print();
+        } else {
+            alert('Bill not found');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background-color: rgb(216, 144, 11);
+        }
+        header {
+            margin: 20px 0;
+        }
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .login-option {
+            text-align: center;
+            margin: 20px;
+        }
+        .login-option img {
+            display: block;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .login-option img:hover {
+            transform: scale(1.1);
+        }
+        .login-option h4 {
+            margin-top: 10px;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h3>Select For Login</h3>
+    </header>
+    <main>
+        <div class="login-option">
+            <a href="customer logi/customerlogin.html" target="main">
+                <img src="customer login.png" alt="customer login" height="100">
+                <h4>Customer Login</h4>
+            </a>
+        </div>
+
+        <div class="login-option">
+            <a href="stafflogin/stafflogin.html" target="main">
+                <img src="staff login.png" alt="staff login" height="100">
+                <h4>Staff Login</h4>
+            </a>
+        </div>
+
+        <div class="login-option">
+            <a href="ceo/ceologin.html" target="main">
+                <img src="ceo login.png" alt="ceo login" height="100">
+                <h4>CEO Login</h4>
+            </a>
+        </div>
+    </main>
+</body>
+</html>
