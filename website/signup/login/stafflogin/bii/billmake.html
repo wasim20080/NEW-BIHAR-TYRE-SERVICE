@@ -104,6 +104,10 @@
         .button:hover {
             background-color: rgb(255, 115, 0);
         }
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
         @media print {
             body * {
                 visibility: hidden;
@@ -129,25 +133,27 @@
     </header>
     <main>
         <form id="billingForm">
-            <input type="number" id="billNo" name="billNo" placeholder="Bill No" required>
+            <input type="number" id="billNo" name="billNo" placeholder="Bill No" required readonly>
             <input type="text" name="username" placeholder="Enter Name" required>
-            <input type="number" name="mobile" placeholder="Enter Mobile Number" required>
-            <div id="orderIds">
-                <input type="text" name="order_id[]" placeholder="Order ID" required>
+            <input type="number" name="mobile" placeholder="Enter Mobile Number" required pattern="\d{10}" maxlength="10">
+            <div id="productNames">
+                <input type="text" name="product_name[]" placeholder="Product Name" required>
             </div>
-            <button type="button" class="button" onclick="addOrderId()">Add More Order ID</button>
-            <div id="stencilNumbers">
-                <input type="number" name="stencil_number[]" placeholder="Stencil Number" required>
-            </div>
-            <button type="button" class="button" onclick="addStencilNumber()">Add More Stencil Number</button>
+            <button type="button" class="button" onclick="addProductName()">Add More Product</button>
             <div id="sellingPrices">
                 <input type="number" name="selling_price[]" placeholder="Selling Price" required>
             </div>
             <button type="button" class="button" onclick="addSellingPrice()">Add More Selling Price</button>
-            <div id="productIds">
-                <input type="number" name="product_id[]" placeholder="Product ID" required>
+            <select name="payment_method" id="payment_method" onchange="togglePaymentDetails()" required>
+                <option value="">Select Payment Method</option>
+                <option value="cash">Cash</option>
+                <option value="online">Online</option>
+            </select>
+            <div id="paymentDetails" style="display:none;">
+                <p>A/C :- 34658419942</p>
+                <p>IFSC CODE:- SBIN0017152</p>
+                <p>UPI ID'S :- 9934968530@ybl</p>
             </div>
-            <button type="button" class="button" onclick="addProductId()">Add More Product ID</button>
             <select name="state" required>
                 <option value="">Select State</option>
                 <!-- List of states -->
@@ -199,7 +205,7 @@ newbihartyreservices@gmail.com
         </pre>
     </div>
     <div>
-        <input type="number" id="searchBillNo" placeholder="Search by Bill No">
+        <input type="number" id="searchBillNo" placeholder="Search by Bill No or Last 6 Digits of Mobile">
         <button class="button" onclick="searchBill()">Search</button>
     </div>
     <div class="recent-bills">
@@ -208,284 +214,187 @@ newbihartyreservices@gmail.com
             <thead>
                 <tr>
                     <th>Bill No</th>
-                    <th>Product IDs</th>
-                    <th>Order IDs</th>
-                    <th>Mobile</th>
+                    <th>Product Names</th>
+                    <th>Mobile Number</th>
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Recent bills will be added here -->
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
-    <a href="#" id="exportButton" class="a" onclick="exportToExcel()">EXPORT TO EXCEL</a>
-
-    <!-- Bill Format Section -->
-    <div id="billFormat" style="display:none;">
-        <h1>NEW BIHAR TYRE SERVICE</h1>
-        <p>GSTIN: 10APEPA9335D1ZL</p>
-        <p><strong>Bill No:</strong> <span id="displayBillNo"></span></p>
-        <p><strong>Order IDs:</strong> <span id="displayOrderIds"></span></p>
-        <p><strong>Product IDs:</strong> <span id="displayProductIds"></span></p>
-        <p><strong>Name:</strong> <span id="displayUsername"></span></p>
-        <p><strong>Mobile:</strong> <span id="displayMobile"></span></p>
-        <p><strong>State:</strong> <span id="displayState"></span></p>
-        <p><strong>City:</strong> <span id="displayCity"></span></p>
-        <p><strong>ZIP:</strong> <span id="displayZip"></span></p>
-        <p><strong>Address:</strong> <span id="displayAddress"></span></p>
-        <p><strong>Selling Prices:</strong> <span id="displaySellingPrices"></span></p>
-        <p><strong>Total Amount:</strong> <span id="displayTotalAmount"></span></p>
-        <p><strong>CGST:</strong> <span id="displayCgst"></span>%</p>
-        <p><strong>SGST:</strong> <span id="displaySgst"></span>%</p>
-        <p><strong>Total with GST:</strong> <span id="displayTotalWithGst"></span></p>
-        <h3>Shipped From</h3>
-        <pre>
-KOIRIYA TOLA, RAXAUL EAST CHAMPARAN, BIHAR 845305
-7717756142, 9934968530
-email:newbihartyreservices@gmail.com
-        </pre>
-    </div>
+    <button class="button" onclick="exportToExcel()">Export to Excel</button>
 
     <script>
-        let bills = [];
+        document.addEventListener('DOMContentLoaded', generateBillNo);
 
-        function submitForm() {
-            const form = document.getElementById('billingForm');
-            const orderIds = Array.from(form['order_id[]']).map(input => input.value);
-            const stencilNumbers = Array.from(form['stencil_number[]']).map(input => input.value);
-            const sellingPrices = Array.from(form['selling_price[]']).map(input => parseFloat(input.value));
-            const productIds = Array.from(form['product_id[]']).map(input => input.value);
-            const totalAmount = sellingPrices.reduce((acc, price) => acc + price, 0);
-            const cgst = parseFloat(form.cgst.value) || 0;
-            const sgst = parseFloat(form.sgst.value) || 0;
-            const totalWithGst = totalAmount + (totalAmount * cgst / 100) + (totalAmount * sgst / 100);
-
-            const bill = {
-                billNo: form.billNo.value,
-                username: form.username.value,
-                mobile: form.mobile.value,
-                orderIds,
-                stencilNumbers,
-                sellingPrices,
-                productIds,
-                totalAmount,
-                cgst,
-                sgst,
-                totalWithGst,
-                state: form.state.value,
-                city: form.city.value,
-                zip: form.zip.value,
-                address: form.address.value
-            };
-            bills.push(bill);
-            displayRecentBills();
-            form.reset();
+        function generateBillNo() {
+            const billNo = Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('billNo').value = billNo;
         }
 
-        function addOrderId() {
-            const orderIdsDiv = document.getElementById('orderIds');
+        function addProductName() {
+            const productNames = document.getElementById('productNames');
             const input = document.createElement('input');
             input.type = 'text';
-            input.name = 'order_id[]';
-            input.placeholder = 'Order ID';
-            input.required = true;
-            orderIdsDiv.appendChild(input);
-        }
-
-        function addStencilNumber() {
-            const stencilNumbersDiv = document.getElementById('stencilNumbers');
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.name = 'stencil_number[]';
-            input.placeholder = 'Stencil Number';
-            input.required = true;
-            stencilNumbersDiv.appendChild(input);
+            input.name = 'product_name[]';
+            input.placeholder = 'Product Name';
+            productNames.appendChild(input);
         }
 
         function addSellingPrice() {
-            const sellingPricesDiv = document.getElementById('sellingPrices');
+            const sellingPrices = document.getElementById('sellingPrices');
             const input = document.createElement('input');
             input.type = 'number';
             input.name = 'selling_price[]';
             input.placeholder = 'Selling Price';
-            input.required = true;
-            sellingPricesDiv.appendChild(input);
+            sellingPrices.appendChild(input);
         }
 
-        function addProductId() {
-            const productIdsDiv = document.getElementById('productIds');
-            const input = document.createElement('input');
-            input.type = 'number';
-            input.name = 'product_id[]';
-            input.placeholder = 'Product ID';
-            input.required = true;
-            productIdsDiv.appendChild(input);
+        function togglePaymentDetails() {
+            const paymentMethod = document.getElementById('payment_method').value;
+            const paymentDetails = document.getElementById('paymentDetails');
+            if (paymentMethod === 'online') {
+                paymentDetails.style.display = 'block';
+            } else {
+                paymentDetails.style.display = 'none';
+            }
         }
 
-        function displayRecentBills() {
-            const tbody = document.getElementById('recentBillsTable').getElementsByTagName('tbody')[0];
-            tbody.innerHTML = '';
-            bills.forEach(bill => {
-                const row = tbody.insertRow();
-                row.innerHTML = `
-                    <td>${bill.billNo}</td>
-                    <td>${bill.productIds.join(', ')}</td>
-                    <td>${bill.orderIds.join(', ')}</td>
-                    <td>${bill.mobile}</td>
-                    <td>
-                        <button class="button" onclick="editBill(${bill.billNo})">Edit</button>
-                        <button class="button" onclick="printBill(${bill.billNo})">Print</button>
-                        <button class="button" onclick="deleteBill(${bill.billNo})">Delete</button>
-                    </td>
-                `;
-            });
+        function submitForm() {
+            const form = document.getElementById('billingForm');
+            const formData = new FormData(form);
+            const billNo = formData.get('billNo');
+            const username = formData.get('username');
+            const productNames = formData.getAll('product_name[]').join(', ');
+            const mobile = formData.get('mobile');
+            const state = formData.get('state');
+            const city = formData.get('city');
+            const zip = formData.get('zip');
+            const address = formData.get('address');
+            const sellingPrices = formData.getAll('selling_price[]').map(Number);
+            const totalSellingPrice = sellingPrices.reduce((sum, price) => sum + price, 0);
+            const cgst = parseFloat(formData.get('cgst') || 0);
+            const sgst = parseFloat(formData.get('sgst') || 0);
+            const totalTax = (cgst + sgst) * totalSellingPrice / 100;
+            const totalPrice = totalSellingPrice + totalTax;
+            const paymentMethod = formData.get('payment_method');
+            
+            const recentBillsTable = document.getElementById('recentBillsTable').querySelector('tbody');
+            const row = recentBillsTable.insertRow();
+            row.insertCell(0).textContent = billNo;
+            row.insertCell(1).textContent = productNames;
+            row.insertCell(2).textContent = mobile;
+
+            const actionsCell = row.insertCell(3);
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'button';
+            deleteButton.onclick = () => deleteRow(row);
+            actionsCell.appendChild(deleteButton);
+
+            const printButton = document.createElement('button');
+            printButton.textContent = 'Print';
+            printButton.className = 'button';
+            printButton.onclick = () => printRow(billNo, productNames, username, mobile, state, city, zip, address, totalSellingPrice, cgst, sgst, totalPrice, paymentMethod);
+            actionsCell.appendChild(printButton);
+
+            // Optionally clear the form
+            form.reset();
+            generateBillNo();
         }
 
         function searchBill() {
             const searchBillNo = document.getElementById('searchBillNo').value;
-            const bill = bills.find(b => b.billNo == searchBillNo);
-            if (bill) {
-                alert(`Bill No: ${bill.billNo}\nProduct IDs: ${bill.productIds.join(', ')}\nOrder IDs: ${bill.orderIds.join(', ')}\nMobile: ${bill.mobile}`);
+            const rows = document.getElementById('recentBillsTable').querySelector('tbody').rows;
+            const searchResults = [];
+            for (let row of rows) {
+                const billNo = row.cells[0].textContent;
+                const mobile = row.cells[2].textContent;
+                if (billNo.includes(searchBillNo) || mobile.slice(-6) === searchBillNo) {
+                    searchResults.push(`Bill No: ${billNo}\nProduct Names: ${row.cells[1].textContent}\nMobile Number: ${mobile}`);
+                }
+            }
+            if (searchResults.length) {
+                alert(searchResults.join('\n\n'));
             } else {
                 alert('Bill not found');
             }
         }
 
-        function editBill(billNo) {
-            const bill = bills.find(b => b.billNo == billNo);
-            if (bill) {
-                const form = document.getElementById('billingForm');
-                form.billNo.value = bill.billNo;
-                form.username.value = bill.username;
-                form.mobile.value = bill.mobile;
-                form.state.value = bill.state;
-                form.city.value = bill.city;
-                form.zip.value = bill.zip;
-                form.address.value = bill.address;
-                form.cgst.value = bill.cgst;
-                form.sgst.value = bill.sgst;
-
-                const orderIdsDiv = document.getElementById('orderIds');
-                orderIdsDiv.innerHTML = '';
-                bill.orderIds.forEach(orderId => {
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.name = 'order_id[]';
-                    input.value = orderId;
-                    orderIdsDiv.appendChild(input);
-                });
-
-                const stencilNumbersDiv = document.getElementById('stencilNumbers');
-                stencilNumbersDiv.innerHTML = '';
-                bill.stencilNumbers.forEach(stencilNumber => {
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.name = 'stencil_number[]';
-                    input.value = stencilNumber;
-                    stencilNumbersDiv.appendChild(input);
-                });
-
-                const sellingPricesDiv = document.getElementById('sellingPrices');
-                sellingPricesDiv.innerHTML = '';
-                bill.sellingPrices.forEach(sellingPrice => {
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.name = 'selling_price[]';
-                    input.value = sellingPrice;
-                    sellingPricesDiv.appendChild(input);
-                });
-
-                const productIdsDiv = document.getElementById('productIds');
-                productIdsDiv.innerHTML = '';
-                bill.productIds.forEach(productId => {
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.name = 'product_id[]';
-                    input.value = productId;
-                    productIdsDiv.appendChild(input);
-                });
-
-                deleteBill(billNo);
-            }
+        function deleteRow(row) {
+            const recentBillsTable = document.getElementById('recentBillsTable').querySelector('tbody');
+            recentBillsTable.deleteRow(row.rowIndex - 1);
         }
 
-        function printBill(billNo) {
-            const bill = bills.find(b => b.billNo == billNo);
-            if (bill) {
-                document.getElementById('displayBillNo').textContent = bill.billNo;
-                document.getElementById('displayOrderIds').textContent = bill.orderIds.join(', ');
-                document.getElementById('displayProductIds').textContent = bill.productIds.join(', ');
-                document.getElementById('displayUsername').textContent = bill.username;
-                document.getElementById('displayMobile').textContent = bill.mobile;
-                document.getElementById('displayState').textContent = bill.state;
-                document.getElementById('displayCity').textContent = bill.city;
-                document.getElementById('displayZip').textContent = bill.zip;
-                document.getElementById('displayAddress').textContent = bill.address;
-                document.getElementById('displaySellingPrices').textContent = bill.sellingPrices.join(', ');
-                document.getElementById('displayTotalAmount').textContent = bill.totalAmount.toFixed(2);
-                document.getElementById('displayCgst').textContent = bill.cgst.toFixed(2);
-                document.getElementById('displaySgst').textContent = bill.sgst.toFixed(2);
-                document.getElementById('displayTotalWithGst').textContent = bill.totalWithGst.toFixed(2);
+        function printRow(billNo, productNames, username, mobile, state, city, zip, address, totalSellingPrice, cgst, sgst, totalPrice, paymentMethod) {
+            const paymentDetails = paymentMethod === 'online' ? `
+                <p>A/C: 34658419942</p>
+                <p>IFSC CODE: SBIN0017152</p>
+                <p>UPI ID: 9934968530@ybl</p>
+            ` : '';
 
-                const billFormat = document.getElementById('billFormat');
-                billFormat.style.display = 'block';
-                window.print();
-                billFormat.style.display = 'none';
-            }
-        }
+            const printContent = `
+                <div id="billFormat">
+                    <h1>NEW BIHAR TYRE SERVICE</h1>
+                    <p>Bill No: ${billNo}</p>
+                    <p><strong>Customer Name:</strong> ${username}</p>
+                    <p><strong>Mobile Number:</strong> ${mobile}</p>
+                    <p><strong>State:</strong> ${state}</p>
+                    <p><strong>City:</strong> ${city}</p>
+                    <p><strong>ZIP Code:</strong> ${zip}</p>
+                    <p><strong>Address:</strong> ${address}</p>
+                    <p><strong>Product Names:</strong> ${productNames}</p>
+                    <p><strong>Total Selling Price:</strong> ₹${totalSellingPrice.toFixed(2)}</p>
+                    <p><strong>CGST (${cgst}%):</strong> ₹${(cgst * totalSellingPrice / 100).toFixed(2)}</p>
+                    <p><strong>SGST (${sgst}%):</strong> ₹${(sgst * totalSellingPrice / 100).toFixed(2)}</p>
+                    <p><strong>Total Price (including GST):</strong> ₹${totalPrice.toFixed(2)}</p>
+                    <p><strong>Payment Method:</strong> ${paymentMethod === 'cash' ? 'Cash' : 'Online'}</p>
+                    ${paymentDetails}
+                    <h3>Shipped From</h3>
+                    <pre>
+KOIRIYA TOLA, RAXAUL EAST CHAMPARAN, BIHAR 845305
+7717756142, 9934968530
+newbihartyreservices@gmail.com
+                Ashfaque Alam
+-Once the goods are purchased, it will be returned within 24hrs.
+-The goods are used,then it will not returned.
+-BRAND TVS,CEAT Bike Tyre Lifetime Unconditional Warranty.
+-you pay online, you will get the goods onlyWhen the payment's successful.
+-All the company's tires also have a warranty.
+-एक बार सामान खरीदने के बाद, इसे 24 घंटे के भीतर वापस कर दिया जाएगा।
+-माल का उपयोग किया जाता है, तो यह वापस नहीं आएगा।
+-ब्रांड टीवीएस, सिएट बाइक टायर लाइफटाइम बिना शर्त वारंटी।
+-आप ऑनलाइन भुगतान करते हैं, आपको केवल सामान मिलेगाजब भुगतान सफल होता है।
+-कंपनी के सभी टायरों की वारंटी भी है।
+      --------------------THANKYOU--------------------
 
-        function deleteBill(billNo) {
-            bills = bills.filter(b => b.billNo != billNo);
-            displayRecentBills();
-        }
-
-    function exportToExcel() {
-        let table = document.getElementById('recentBillsTable');
-        let rows = Array.from(table.rows);
-        let csvContent = rows.map(row => Array.from(row.cells).map(cell => cell.innerText).join(',')).join('\n');
-
-        let csvFile = new Blob([csvContent], { type: 'text/csv' });
-        let downloadLink = document.createElement('a');
-        downloadLink.download = 'recent_bills.csv';
-        downloadLink.href = window.URL.createObjectURL(csvFile);
-        downloadLink.style.display = 'none';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    }
-
-    function downloadPDF() {
-        const searchBillNo = document.getElementById('searchBillNo').value;
-        const bill = bills.find(b => b.billNo == searchBillNo);
-        if (bill) {
-            const billDetails = `
-                Bill No: ${bill.billNo}\n
-                Order IDs: ${bill.order_ids.join(', ')}\n
-                Stencil Numbers: ${bill.stencil_numbers.join(', ')}\n
-                Selling Prices: ${bill.selling_prices.join(', ')}\n
-                Product IDs: ${bill.product_ids.join(', ')}\n
-                Name: ${bill.username}\n
-                Mobile: ${bill.mobile}\n
-                State: ${bill.state}\n
-                City: ${bill.city}\n
-                ZIP: ${bill.zip}\n
-                Address: ${bill.address}\n
-                Shipped From: KOIRIYA TOLA, RAXAUL EAST CHAMPARAN, BIHAR 845305\n
-                7717756142, 9934968530\n
-                email:newbihartyreservices@gmail.com
+      --------------------धन्यवाद-----------------------
+                    </pre>
+                </div>
             `;
-
-            const pdfWindow = window.open('', '', 'height=700,width=700');
-            pdfWindow.document.write('<html><head><title>Bill PDF</title></head><body>');
-            pdfWindow.document.write('<pre>' + billDetails + '</pre>');
-            pdfWindow.document.write('</body></html>');
-            pdfWindow.document.close();
-            pdfWindow.print();
-        } else {
-            alert('Bill not found');
+            const newWindow = window.open('', '', 'width=800,height=600');
+            newWindow.document.write(printContent);
+            newWindow.print();
         }
-    }
-</script>
+
+        function exportToExcel() {
+            const recentBillsTable = document.getElementById('recentBillsTable');
+            const rows = recentBillsTable.rows;
+            let csvContent = '';
+            for (let row of rows) {
+                const cells = row.cells;
+                let rowContent = [];
+                for (let cell of cells) {
+                    rowContent.push(cell.textContent);
+                }
+                csvContent += rowContent.join(',') + '\n';
+            }
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'recent_bills.csv';
+            link.click();
+        }
+    </script>
 </body>
 </html>
